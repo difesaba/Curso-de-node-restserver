@@ -7,10 +7,6 @@ const usuariosGet = async (req = request, res = response) => {
     //const { q, nombre = 'No name', apikey } = req.query;
     const { limite = 5, desde = 0 } = req.query;
     const query = { estado: true };
-    /*const usuarios = await Usuario.find(query)
-    .skip(Number(desde))
-    .limit(Number(limite));
-    const total = await Usuario.countDocuments(query);*/
     /*Promise.all ejecuta promesas de manera simultanea y reduce el timepo  cuando una promesa no depende de otra y las puede ejeuctar de manera simultanea*/
     const [total, usuarios] = await Promise.all([
         Usuario.countDocuments(query),
@@ -46,10 +42,11 @@ const usuariosPut = async (req, res = response) => {
 
 const usuariosDelete = async (req, res = response) => {
     const { id } = req.params;
-    //fisicamente lo borramos
-    //const usuario = await Usuario.findByIdAndDelete(id);
+
     const usuario = await Usuario.findByIdAndUpdate(id, { estado: false })
-    res.json(usuario)
+    const usuarioAutenticado = req.usuario;
+
+    res.json({ usuario, usuarioAutenticado })
 }
 
 const usuariosPatch = (req, res = response) => {
