@@ -1,5 +1,4 @@
 const { response } = require('express');
-const res = require('express/lib/response');
 const { Categoria, Producto } = require('../models');
 const {Role} = require('../models');
 const {Usuario} = require('../models');
@@ -18,7 +17,6 @@ const emailExiste = async (correo = '') => {
     }
 }
 
-
 const existeUsuarioPorId = async ( id ) => {
     const existeUsuario = await Usuario.findById(id);
     if (!existeUsuario) {
@@ -33,7 +31,6 @@ const existeCategoriaPorId = async ( id ) => {
     }
 }
 
-
 const existeProductoPorId = async ( id ) => {
     const existeProducto = await Producto.findById(id);
     if (!existeProducto) {
@@ -41,12 +38,20 @@ const existeProductoPorId = async ( id ) => {
     }
 }
 
+const coleccionesPermitidas = ( coleccion = '', colecciones = [])=>{
+    const incluida = colecciones.includes(coleccion);
+    if (!incluida) {
+        throw new Error(`La coleccion ${coleccion} no es permitida, ${colecciones}`);
+    }
 
+    return true;
+}
 
 module.exports = {
     esRoleValido,
     emailExiste,
     existeUsuarioPorId,
     existeCategoriaPorId,
-    existeProductoPorId
+    existeProductoPorId,
+    coleccionesPermitidas
 }
